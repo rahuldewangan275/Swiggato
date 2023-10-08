@@ -4,7 +4,10 @@ import com.example.Swiggato.dto.requestDto.CustomerRequest;
 import com.example.Swiggato.dto.responseDto.CartResponse;
 import com.example.Swiggato.dto.responseDto.CustomerResponse;
 import com.example.Swiggato.model.Customer;
+import com.example.Swiggato.model.FoodItem;
 import lombok.experimental.UtilityClass;
+
+import java.util.ArrayList;
 
 
 public class CustomerTransformer {

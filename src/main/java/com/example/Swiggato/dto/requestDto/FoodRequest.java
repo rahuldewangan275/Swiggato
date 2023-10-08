@@ -17,5 +17,4 @@ public class FoodRequest {
     FoodCategory foodCategory;
     boolean veg;
     boolean available;
-
 }
