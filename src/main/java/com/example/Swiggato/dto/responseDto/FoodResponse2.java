@@ -1,8 +1,6 @@
 package com.example.Swiggato.dto.responseDto;
 
 import com.example.Swiggato.Enum.FoodCategory;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodResponse {
+public class FoodResponse2 {
 
     String dishName;
 
@@ -21,4 +19,5 @@ public class FoodResponse {
 
     boolean veg;
 
+    String restaurantName;
 }
