@@ -1,5 +1,6 @@
 package com.example.Swiggato.dto.responseDto;
 
+import com.example.Swiggato.model.FoodItem;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,6 +14,5 @@ import java.util.List;
 public class CartResponse {
 
     double cartTotal;
-
-    List<FoodResponse> foodItems;
+    List<FoodResponse> foodList;
 }

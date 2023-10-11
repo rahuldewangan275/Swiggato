@@ -1,9 +1,9 @@
 package com.example.Swiggato.controller;
 
 import com.example.Swiggato.Enum.FoodCategory;
-import com.example.Swiggato.dto.responseDto.FoodResponse;
-import com.example.Swiggato.dto.responseDto.FoodResponse2;
-import com.example.Swiggato.service.FoodItemService;
+import com.example.Swiggato.dto.responseDto.MenuResponse;
+import com.example.Swiggato.dto.responseDto.MenuResponse2;
+import com.example.Swiggato.service.MenuItemService;
 import com.example.Swiggato.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,65 +14,59 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/food")
-public class FoodItemController {
+public class MenuController {
     // constructor injection
-    final FoodItemService foodItemService;
+    final MenuItemService menuItemService;
     final RestaurantService restaurantService;
     @Autowired
-    public FoodItemController(FoodItemService foodItemService, RestaurantService restaurantService) {
-        this.foodItemService = foodItemService;
+    public MenuController(MenuItemService menuItemService, RestaurantService restaurantService) {
+        this.menuItemService = menuItemService;
         this.restaurantService = restaurantService;
     }
-
-
-
-    //get all veg foods of a restaurant
-    // get all nonveg foods of a restaurant
-    // get cheapest 5 food items of a restaurant
 
     //// get all foods of a perticular category
     @GetMapping("/get/foods/category/{category}")
     public ResponseEntity getAllFoodsOfParticularCategory(@PathVariable("category") FoodCategory foodCategory){
-        List<FoodResponse> foodResponseList = foodItemService.getAllFoodsOfParticularCategory(foodCategory);
-        return new ResponseEntity<>(foodResponseList, HttpStatus.ACCEPTED);
+        List<MenuResponse> menuResponseList = menuItemService.getAllFoodsOfParticularCategory(foodCategory);
+        return new ResponseEntity<>(menuResponseList, HttpStatus.ACCEPTED);
     }
 
     // get all foodcategory items with price above x rupees from a peticular restaurant
     @GetMapping("/get/foods/{category}/{priceAbove}")
     public ResponseEntity getAllFoodsOfParticularCategoryAndPriceAbove(@PathVariable("category") FoodCategory foodCategory,@PathVariable("priceAbove") double priceAbove){
-        List<FoodResponse> foodResponseList = foodItemService.getAllFoodsOfParticularCategoryAndPriceAbove(foodCategory,priceAbove);
+        List<MenuResponse> menuResponseList = menuItemService.getAllFoodsOfParticularCategoryAndPriceAbove(foodCategory,priceAbove);
 
-        if(foodResponseList.size()==0){
+        if(menuResponseList.size()==0){
             return new ResponseEntity<>("No results Found!!",HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(foodResponseList, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(menuResponseList, HttpStatus.ACCEPTED);
     }
 
     // get all nonveg foods
     @GetMapping("get/all-veg")
     public ResponseEntity getAllNonVegFoods(){
-        List<FoodResponse> foodResponseList = foodItemService.getAllNonVegFoods();
+        List<MenuResponse> menuResponseList = menuItemService.getAllNonVegFoods();
 
-        if(foodResponseList.size()==0){
+        if(menuResponseList.size()==0){
             return new ResponseEntity<>("No results Found!!",HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(foodResponseList, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(menuResponseList, HttpStatus.ACCEPTED);
     }
 
     // get all veg foods
     @GetMapping("get/all-non-veg")
     public ResponseEntity getAllVegFoods(){
-        List<FoodResponse> foodResponseList = foodItemService.getAllVegFoods();
+        List<MenuResponse> menuResponseList = menuItemService.getAllVegFoods();
 
-        if(foodResponseList.size()==0){
+        if(menuResponseList.size()==0){
             return new ResponseEntity<>("No results Found!!",HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(foodResponseList, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(menuResponseList, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("get/price-low-to-high")
     public ResponseEntity priceLowToHigh(){
-        List<FoodResponse2> foodResponseList = foodItemService.priceLowToHigh();
+        List<MenuResponse2> foodResponseList = menuItemService.priceLowToHigh();
 
         if(foodResponseList.size()==0){
             return new ResponseEntity<>("No results Found!!",HttpStatus.NOT_FOUND);
@@ -86,12 +80,12 @@ public class FoodItemController {
     public ResponseEntity sortRestaurantFoodByPrice(@RequestParam("restaurantId") int id){
         String msg="";
         try {
-            List<FoodResponse> foodResponseList = foodItemService.sortRestaurantFoodByPrice(id);
+            List<MenuResponse> menuResponseList = menuItemService.sortRestaurantFoodByPrice(id);
 
-            if (foodResponseList.size() == 0) {
+            if (menuResponseList.size() == 0) {
                 return new ResponseEntity<>("No results Found!!", HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>( foodResponseList, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(menuResponseList, HttpStatus.ACCEPTED);
         }catch(Exception e){
           return  new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }

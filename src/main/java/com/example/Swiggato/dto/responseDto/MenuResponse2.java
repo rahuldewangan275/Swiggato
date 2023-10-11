@@ -4,20 +4,20 @@ import com.example.Swiggato.Enum.FoodCategory;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FoodResponse {
+public class MenuResponse2 {
 
     String dishName;
 
     double price;
 
-    FoodCategory category;
+    FoodCategory foodCategory;
 
     boolean veg;
 
-    int quantityAdded;
+    String restaurantName;
 }

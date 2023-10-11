@@ -1,14 +1,14 @@
 package com.example.Swiggato.service;
 
-import com.example.Swiggato.dto.requestDto.FoodRequest;
+import com.example.Swiggato.dto.requestDto.MenuRequest;
 import com.example.Swiggato.dto.requestDto.RestaurantRequest;
-import com.example.Swiggato.dto.responseDto.FoodResponse;
+import com.example.Swiggato.dto.responseDto.MenuResponse;
 import com.example.Swiggato.dto.responseDto.RestaurantResponse;
 import com.example.Swiggato.exception.RestaurantNotFoundException;
-import com.example.Swiggato.model.FoodItem;
+import com.example.Swiggato.model.MenuItem;
 import com.example.Swiggato.model.Restaurant;
 import com.example.Swiggato.repository.RestaurantRepository;
-import com.example.Swiggato.transformer.FoodItemTransformer;
+import com.example.Swiggato.transformer.MenuItemTransformer;
 import com.example.Swiggato.transformer.RestaurantTransformer;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +56,8 @@ public class RestaurantService {
         return "Restaurant is Closed";
     }
 
-    public RestaurantResponse addFoodItemToRestaurant(FoodRequest foodRequest ,int id) {
-        FoodItem foodItem = FoodItemTransformer.FoodRequestToFoodItem(foodRequest);
+    public RestaurantResponse addMenuItemToRestaurant(MenuRequest menuRequest, int id) {
+        MenuItem menuItem = MenuItemTransformer.MenuRequestToMenuItem(menuRequest);
         // check restaurant valid or not
         Optional<Restaurant> optional = restaurantRepository.findById(id);
         if(optional.isEmpty()){
@@ -66,28 +66,28 @@ public class RestaurantService {
 
         //get restaurant
         Restaurant restaurant = optional.get();
-        foodItem.setRestaurant(restaurant);
+        menuItem.setRestaurant(restaurant);
 
         // add food item to restaurant
-        restaurant.getAvailableFoodItems().add(foodItem);
+        restaurant.getAvailableMenuItems().add(menuItem);
 
         // saved both restaurant and food Item
         Restaurant saved = restaurantRepository.save(restaurant);
         return RestaurantTransformer.RestaurantToRestaurantResponse(saved);
     }
 
-    public List<FoodResponse> getMenuOfRestaurant(int id) {
+    public List<MenuResponse> getMenuOfRestaurant(int id) {
         Optional<Restaurant> optional = restaurantRepository.findById(id);
         if(optional.isEmpty()){
             throw new RestaurantNotFoundException("Restaurant doesn't Exist");
         }
 
         Restaurant restaurant = optional.get();
-        List<FoodItem> foodItemList = restaurant.getAvailableFoodItems();
+        List<MenuItem> menuItemList = restaurant.getAvailableMenuItems();
 
-        List<FoodResponse> foodResponseList = FoodItemTransformer.FoodItemListToFoodResponseList(foodItemList);
+        List<MenuResponse> menuResponseList = MenuItemTransformer.MenuItemListToMenuResponseList(menuItemList);
 
-        return foodResponseList;
+        return menuResponseList;
 
     }
 

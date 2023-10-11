@@ -35,7 +35,7 @@ public class Restaurant {
 
     //cardinality relation
     @OneToMany(mappedBy ="restaurant" , cascade = CascadeType.ALL)
-    List<FoodItem> availableFoodItems = new ArrayList<>();
+    List<MenuItem> availableMenuItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL)
     List<OrderEntity> orders = new ArrayList<>();

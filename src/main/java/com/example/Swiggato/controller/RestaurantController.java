@@ -1,11 +1,10 @@
 package com.example.Swiggato.controller;
 
-import com.example.Swiggato.dto.requestDto.FoodRequest;
+import com.example.Swiggato.dto.requestDto.MenuRequest;
 import com.example.Swiggato.dto.requestDto.RestaurantRequest;
-import com.example.Swiggato.dto.responseDto.FoodResponse;
+import com.example.Swiggato.dto.responseDto.MenuResponse;
 import com.example.Swiggato.dto.responseDto.RestaurantResponse;
 import com.example.Swiggato.service.RestaurantService;
-import com.sun.jdi.event.ExceptionEvent;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +38,9 @@ public class RestaurantController {
     }
 
     @PostMapping("/add-food-to-restaurant")
-    public ResponseEntity addFoodItemToRestaurant(@RequestBody FoodRequest foodRequest,@RequestParam("restaurant-id") int id ){
+    public ResponseEntity addFoodItemToRestaurant(@RequestBody MenuRequest menuRequest, @RequestParam("restaurant-id") int id ){
         try {
-            RestaurantResponse restaurantResponse = restaurantService.addFoodItemToRestaurant(foodRequest, id);
+            RestaurantResponse restaurantResponse = restaurantService.addMenuItemToRestaurant(menuRequest, id);
             return new ResponseEntity<>(restaurantResponse, HttpStatus.CREATED);
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
@@ -52,8 +51,8 @@ public class RestaurantController {
     @GetMapping("/get/menu")
     public ResponseEntity getMenuOfRestaurant(@RequestParam("id") int id){
         try{
-            List<FoodResponse> foodResponseList = restaurantService.getMenuOfRestaurant(id);
-            return new ResponseEntity<>(foodResponseList,HttpStatus.FOUND);
+            List<MenuResponse> menuResponseList = restaurantService.getMenuOfRestaurant(id);
+            return new ResponseEntity<>(menuResponseList,HttpStatus.FOUND);
         }catch(Exception e){
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }

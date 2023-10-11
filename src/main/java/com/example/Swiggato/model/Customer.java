@@ -38,7 +38,6 @@ public class Customer {
 
     @Column(unique = true,nullable = false)
     @Size(min = 10,max=10)
-    @NumberFormat
     String phoneNo;
 
     String address;

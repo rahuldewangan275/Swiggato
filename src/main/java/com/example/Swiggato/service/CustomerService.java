@@ -10,6 +10,8 @@ import com.example.Swiggato.transformer.CustomerTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class CustomerService {
 @Autowired
@@ -22,8 +24,10 @@ CustomerRepository customerRepository;
         Cart cart = Cart.builder()
                 .cartTotal(0)
                 .customer(customer)
+                .foodItems(new ArrayList<>())
                 .build();
-        customer.setCart(cart);
+
+                 customer.setCart(cart);
 
         Customer savedCustomer = customerRepository.save(customer); // saved both customer and cart
 
@@ -32,10 +36,10 @@ CustomerRepository customerRepository;
     }
 
     public CustomerResponse getCustomerByMobile(String mobile) { // phone no or mobile is same thing
-       Customer customer = customerRepository.findByPhoneNo(mobile);
-if(customer==null){
-    throw new CustomerNotFoundException("Customer Not Found!!!!\nInvalid Mobile Number");
-}
-return CustomerTransformer.CustomerToCustomerResponse(customer);
+        Customer customer = customerRepository.findByPhoneNo(mobile);
+         if(customer==null){
+         throw new CustomerNotFoundException("Customer Not Found!!!!\nInvalid Mobile Number");
+        }
+        return CustomerTransformer.CustomerToCustomerResponse(customer);
     }
 }
