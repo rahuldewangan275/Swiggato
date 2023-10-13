@@ -16,6 +16,8 @@ import com.example.Swiggato.repository.MenuItemRepository;
 import com.example.Swiggato.transformer.FoodItemTransformer;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,6 +51,8 @@ public class CartService {
         //menu item
         MenuItem menuItem = menuItemOptional.get();
 
+        int restaurantId = menuItem.getRestaurant().getId();
+
         //check item availability
          if(!menuItem.isAvailable()){
              throw new MenuItemNotFoundexception("Given Dish Is Out Of Stock For Now!!");
@@ -62,11 +66,29 @@ public class CartService {
         //getting cart from customer
         Cart cart = customer.getCart();
 
+
         double totalFoodCost = menuItem.getPrice()* foodRequest.getRequiredQuantity();
         double updatedCartTotal = cart.getCartTotal()+totalFoodCost;
 
+
+//        //if you adding dish from another restaurant then empty cart food item list first then adding new items
+//        if((cart.getFoodItems().size() >=1) && (cart.getFoodItems().get(0).getMenuItem().getRestaurant().getId() != restaurantId)){
+//            cart.setFoodItems(new ArrayList<FoodItem>());
+//            updatedCartTotal = totalFoodCost;
+//        }
+
+// if food item is alreay present then just update the quantity and cart total
+        FoodItem alreadyPresentFoodItem = null ;
         //set new cart total
         cart.setCartTotal(updatedCartTotal);
+        List<FoodItem> foodItemsInCart = cart.getFoodItems();
+        for(FoodItem foodItem : foodItemsInCart){
+            if(foodItem.getMenuItem().getId() == menuItem.getId()){
+
+                alreadyPresentFoodItem= foodItem;
+                break;
+            }
+        }
 
        //creating food-item
         FoodItem foodItem = FoodItem.builder()
@@ -75,6 +97,12 @@ public class CartService {
                 .cart(cart)
                 .menuItem(menuItem)
                 .build();
+
+        // id food item present already
+        if(alreadyPresentFoodItem != null){
+        foodItem.setId(alreadyPresentFoodItem.getId());
+        foodItem.setRequiredQuantity(foodItem.getRequiredQuantity()+alreadyPresentFoodItem.getRequiredQuantity());
+        }
 
                  FoodItem savedFoodItem = foodItemRepository.save(foodItem);   // saved first to avoid duplicate entry in database
 

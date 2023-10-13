@@ -27,11 +27,11 @@ public class Customer {
 
     @Size(min=2,message = "{validation.name.size_too_short}")
     @Size(max=40,message = "{validation.name.size_too_long}")
-
     String name ;
 
     @Enumerated(EnumType.STRING)
     Gender gender;
+
     @Email //jakarta validation constraint
     @Column(unique = true)
     String email;
