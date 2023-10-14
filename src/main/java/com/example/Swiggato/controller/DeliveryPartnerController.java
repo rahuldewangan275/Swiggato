@@ -30,4 +30,12 @@ public class DeliveryPartnerController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
+
+    // give delivery partner with highest number of deliverise
+
+    //send an email to all the parameters who have less than 10 deliveries
+
+    // give the restaurant which have maximum number of item in their menu and which are opened also
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.Swiggato.service;
 
+import com.example.Swiggato.dto.responseDto.FoodResponse;
 import com.example.Swiggato.dto.responseDto.OrderResponse;
 import com.example.Swiggato.exception.CustomerNotFoundException;
 import com.example.Swiggato.exception.EmptyCartException;
@@ -9,6 +10,9 @@ import com.example.Swiggato.repository.DeliveryPartnerRepository;
 import com.example.Swiggato.repository.OrderRepository;
 import com.example.Swiggato.repository.RestaurantRepository;
 import com.example.Swiggato.transformer.OrderTransformer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +20,8 @@ import java.util.List;
 
 @Service
 public class OrderService {
+    @Autowired
+    JavaMailSender javaMailSender;  // to send an email
     final OrderRepository orderRepository;
     final DeliveryPartnerRepository deliveryPartnerRepository;
     final CustomerRepository customerRepository;
@@ -84,7 +90,45 @@ public class OrderService {
         // prepare Order response
         OrderResponse orderResponse =OrderTransformer.prepareOrderResponse(savedOrder);
 
-        return orderResponse;
+        //prepare an email of confirmation
+        String customerName = customer.getName();
+        String customerMo = customer.getPhoneNo();
+        String customerAddress = customer.getAddress();
+        String restaurantName = orderResponse.getRestaurantName();
+        String DeliveryBoy = orderResponse.getDeliveryPartnerName();
+        String DeliveryBoyMo=orderResponse.getDeliveryPartnerMobile();
+        String orderId = orderEntity.getOrderId();
+
+
+        String foodItemString = "";
+        for(FoodResponse foodResponse : orderResponse.getFoodResponseList()){
+            foodItemString += foodResponse.getDishName()+" :₹"+foodResponse.getPrice()+" \n ";
+        }
+
+        String msgForCustomer1 = "Dear,"+customerName+"\n"+"We're thrilled to inform you that your food delivery order has been successfully placed and is on its way to you. Your order details are as follows:\n" +
+                "OrderId :#"+orderId +"\n"
+                +"Delivery Address :"+customerAddress+"\n"+
+                "Contact Number :"+customerMo+"\n"+"\n"+
+                "ORDER DETAILS:"
+                +"\n"+
+                "Restaurant :"+restaurantName+"\n"+
+                "Delivery Partner :"+DeliveryBoy +"\n"+
+                "Delivery Partner Contact :"+DeliveryBoyMo +"\n"+
+                "Order Date :"+orderResponse.getOrderTime()+"\n"+"\n"+
+
+                "ORDER SUMMARY :"
+                +"\n"+foodItemString+"\n"+
+                        "Order Total :₹"+orderResponse.getOrderTotal()+"\n \n \n"+
+                        "              THANK YOU         ";
+
+
+                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+             simpleMailMessage.setFrom("rahulkumardewangan380@gmail.com");
+             simpleMailMessage.setTo(customer.getEmail());
+                simpleMailMessage.setSubject("SWIGGATO ORDER PLACED");
+                simpleMailMessage.setText(msgForCustomer1);
+                javaMailSender.send(simpleMailMessage);
+                return orderResponse;
 
     }
 
